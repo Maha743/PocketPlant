@@ -1,0 +1,49 @@
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Scanner;
+
+public class PocketPlantApp {
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        // Define a map of plants with their watering schedules (in days)
+        Map<String, Integer> plantData = new HashMap<>();
+        plantData.put("Snake Plant", 14);
+        plantData.put("Fern", 7);
+        plantData.put("Succulent", 10);
+        plantData.put("Peace Lily", 5);
+
+        System.out.print("Enter the plant name: ");
+        String plantName = scanner.nextLine();
+
+        // Parse the last watering date
+        LocalDate lastWateredDate = null;
+        DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        try {
+            System.out.print("Enter the last watering date (yyyy-MM-dd): ");
+            String lastWateredInput = scanner.nextLine();
+            lastWateredDate = LocalDate.parse(lastWateredInput, dateFormat);
+        } catch (Exception e) {
+            System.out.println("Invalid date format. Please use yyyy-MM-dd.");
+            return;
+        }
+
+        int wateringInterval = plantData.getOrDefault(plantName, -1);
+
+        if (wateringInterval != -1) {
+            LocalDate nextWateringDate = lastWateredDate.plusDays(wateringInterval);
+            LocalDate today = LocalDate.now();
+
+            if (today.isEqual(nextWateringDate)) {
+                System.out.println("It's time to water your " + plantName + "!");
+            } else {
+                System.out.println("Don't forget to water your " + plantName + " on time.");
+            }
+        } else {
+            System.out.println("Plant not found in the database.");
+        }
+    }
+}
